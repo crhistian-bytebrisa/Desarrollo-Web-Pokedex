@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { GetPokemon, GetPokemons } from "../Services/PokeAPI";
 import "../Styles/All.css";
+import "../Styles/Home.css"
 import type { PokemonApiResponse } from "../Models/PokemonList";
-import type { Pokemon } from "../Models/Pokemon";
+import type { SimplePokemon } from "../Models/Pokemon";
 import CardPokemon from "../Components/CardPokemon";
 
 function Home(){
@@ -14,10 +15,11 @@ function Home(){
         count: 0,
         results: null
     });
-    const [pokemons, setPokemons] = useState<Pokemon[]>();
+    const [pokemons, setPokemons] = useState<SimplePokemon[]>();
     //tambien guardo el limite de la api en el estado
-    const [limit, setLimit] = useState(500);
+    const [limit, setLimit] = useState(20);
     const [offset] = useState(0);
+    const [loading, setLoading] = useState(true);
 
     //funcion encargada de asignar la lista de pokemons y los pokemons de forma asincrona
     const Cargar = async () =>{
@@ -28,10 +30,12 @@ function Home(){
         if(data.results != null)
         {
             const poks = await Promise.all(
-                data.results.map(p =>GetPokemon(p.url))
-            );
-           
+                data.results.map((p) => GetPokemon(p.url))
+            )         
+
             setPokemons(poks);
+
+            setLoading(false);
         }
     }
 
@@ -46,7 +50,7 @@ function Home(){
         data();
 
 
-    });
+    },[limit]);
 
     //Aca se encarga de optener el evento del select y luego usar el setLimit
     function CambiarLimit(event: React.ChangeEvent<HTMLSelectElement>)
@@ -54,7 +58,8 @@ function Home(){
         const value = event.target.value;
         setLimit(Number(value));
     }
-    
+
+
     return(
         <>            
             <h3>Pokedex</h3>
@@ -72,12 +77,21 @@ function Home(){
             <p>Cantidad de Pokemons: {list.count}</p>
             <p>Mostrados: {offset} - {limit}</p>
             <br />
-            <div id="Lista" style={{display: 'flex', flexWrap: 'wrap'}}>
+            <div id="Lista" className="loader-container pokedex">
+            
             {
-                //Un mapeo para el componente
-                pokemons?.map(pokemon => (
-                    <CardPokemon key={pokemon.order} {...pokemon}/>
-                ))
+            //Uso el estado de loadin para mostrar una cosa u otra
+            loading ?(
+                    <div>
+                        <div className="spinner"></div>
+                        <p>Cargando...</p>
+                    </div>
+                ) : (
+                    //Un mapeo para el componente
+                    pokemons?.map(pokemon => (
+                        <CardPokemon key={pokemon.order} {...pokemon}/>
+                    ))
+                )
             }
             </div>
 

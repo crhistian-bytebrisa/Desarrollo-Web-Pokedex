@@ -1,4 +1,8 @@
-export interface Pokemon {
+export interface Pokemon extends SimplePokemon {
+    abilities: []
+}
+
+export interface SimplePokemon{
     name: string,
     order: number,
     base_experience: number;

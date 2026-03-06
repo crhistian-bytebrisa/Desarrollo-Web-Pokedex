@@ -1,16 +1,13 @@
-import type { Pokemon } from "../Models/Pokemon";
+import type { SimplePokemon } from "../Models/Pokemon";
 import "../Styles/All.css";
+import "../Styles/Pokemon.css";
 
-function CardPokemon(poke: Pokemon){
+function CardPokemon(poke: SimplePokemon){
     return(
         <>
-            <div style={
-                {border: '5px solid black', borderRadius: '5px', height: '300px', 
-                    width: '300px', alignItems: 'center', textAlign: 'center'}
-                }>
-                <img src={poke.sprites.other["official-artwork"].front_default.toString()} alt="" 
-                style={{height: '200px',width: '200px'}}
-                />
+            <div className="card-pokemon">
+                <img src={poke.sprites.other["official-artwork"].front_default.toString()} 
+                alt={"img-"+poke.name}/>
                 <h3>{poke.id} - {poke.name}</h3>
                 <p>Exp: {poke.base_experience}</p>
                 <p>Tamaño: {poke.height}</p>

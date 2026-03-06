@@ -1,4 +1,4 @@
-import type { Pokemon } from "../Models/Pokemon";
+import type { SimplePokemon } from "../Models/Pokemon";
 import type { PokemonApiResponse } from "../Models/PokemonList";
 
 //Export para exportar y async para asincronia :v.
@@ -29,8 +29,8 @@ export async function GetPokemon(urlpokemon:string) {
     const url = new URL(urlpokemon);      
 
     const response = await fetch(url.toString());
-    const json: Pokemon = await response.json();
-    const poke: Pokemon = {
+    const json: SimplePokemon = await response.json();
+    const poke: SimplePokemon = {
         name: json.name,
         order: json.order,
         base_experience: json.base_experience,
